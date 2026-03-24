@@ -9,6 +9,7 @@ and finally unlinks (frees) the SharedMemory block.
 The Viewer is the last consumer in the pipeline — it owns SharedMemory cleanup.
 """
 
+import logging
 import os
 import cv2
 import numpy as np
@@ -23,12 +24,28 @@ from ipc import DetectorMessage, EOS_SENTINEL
 BLUR_KERNEL_FRACTION = 0.2
 
 
-def _read_frame(msg: DetectorMessage, release_queue: Queue) -> np.ndarray:
-    """Attach to the SharedMemory block, copy the frame, then release it."""
-    shm = SharedMemory(name=msg.shm_name, create=False)
-    frame = np.ndarray(msg.frame_shape, dtype=msg.frame_dtype, buffer=shm.buf).copy()
-    shm.close()
-    shm.unlink()  # no-op on Windows; frees named block on Linux
+def _read_frame(msg: DetectorMessage, release_queue: Queue, logger: logging.Logger):
+    """Attach to the SharedMemory block, copy the frame, then release it.
+
+    Returns the frame as a numpy array, or None if the block could not be
+    opened (e.g. race condition on abnormal shutdown).  The release signal is
+    sent to release_queue in both cases so the Streamer is never left waiting.
+    """
+    try:
+        shm = SharedMemory(name=msg.shm_name, create=False)
+        frame = np.ndarray(msg.frame_shape, dtype=msg.frame_dtype, buffer=shm.buf).copy()
+        shm.close()
+        shm.unlink()  # no-op on Windows; frees named block on Linux
+    except FileNotFoundError:
+        logger.warning("SharedMemory block '%s' not found for frame %d — skipping display",
+                       msg.shm_name, msg.frame_index)
+        release_queue.put(msg.shm_name)
+        return None
+    except Exception as exc:
+        logger.error("Error reading frame %d from SharedMemory: %s", msg.frame_index, exc)
+        release_queue.put(msg.shm_name)
+        return None
+
     release_queue.put(msg.shm_name)
     return frame
 
@@ -93,24 +110,47 @@ def run_viewer(from_detector: Queue, video_path: str, release_queue: Queue, stop
                        but not used; EOS propagates via Queue and triggers
                        cv2.destroyAllWindows on receipt.
     """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    logger = logging.getLogger("viewer")
+    logger.info("Viewer started")
+
     basename = os.path.basename(video_path)
     title: str | None = None
+    displayed = 0
 
-    while True:
-        msg = from_detector.get()
+    try:
+        while True:
+            msg = from_detector.get()
 
-        if msg is EOS_SENTINEL:
-            cv2.destroyAllWindows()
-            return
+            if msg is EOS_SENTINEL:
+                logger.info("EOS received — displayed %d frame(s)", displayed)
+                cv2.destroyAllWindows()
+                return
 
-        if title is None:
-            title = f"VideoStreamAnalysis \u2014 {basename} | {msg.fps:.0f}fps"
-            cv2.namedWindow(title, cv2.WINDOW_NORMAL)
+            frame = _read_frame(msg, release_queue, logger)
+            if frame is None:
+                continue  # SharedMemory read failed; release signal already sent
 
-        frame = _read_frame(msg, release_queue)
-        _blur_motion_regions(frame, msg.contours)
-        _draw_motion_boxes(frame, msg.contours)
-        _draw_timestamp(frame, msg.frame_index, msg.fps)
+            try:
+                if title is None:
+                    title = f"VideoStreamAnalysis \u2014 {basename} | {msg.fps:.0f}fps"
+                    cv2.namedWindow(title, cv2.WINDOW_NORMAL)
 
-        cv2.imshow(title, frame)
-        cv2.waitKey(max(1, int(1000 / msg.fps)))
+                _blur_motion_regions(frame, msg.contours)
+                _draw_motion_boxes(frame, msg.contours)
+                _draw_timestamp(frame, msg.frame_index, msg.fps)
+
+                cv2.imshow(title, frame)
+                cv2.waitKey(max(1, int(1000 / msg.fps)))
+                displayed += 1
+            except Exception as exc:
+                logger.error("Display error on frame %d: %s — skipping", msg.frame_index, exc)
+
+    except Exception as exc:
+        logger.exception("Unexpected error in viewer: %s", exc)
+    finally:
+        cv2.destroyAllWindows()

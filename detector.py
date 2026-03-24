@@ -8,6 +8,7 @@ and the original SharedMemory name) to the Viewer via a second Queue.
 The Detector never draws on frames. All annotation is deferred to the Viewer.
 """
 
+import logging
 import cv2
 import numpy as np
 from multiprocessing import Queue
@@ -37,40 +38,88 @@ def run_detector(from_streamer: Queue, to_viewer: Queue, stop_event) -> None:
         stop_event:    multiprocessing.Event accepted for interface consistency
                        but not used; EOS propagates via Queue.
     """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    logger = logging.getLogger("detector")
+    logger.info("Detector started")
+
     # Initialise MOG2 subtractor once; it builds an adaptive background model
     # over the first several frames so the initial frames may have high recall.
     bg_sub = cv2.createBackgroundSubtractorMOG2()
+    processed = 0
 
-    while True:
-        msg = from_streamer.get()  # blocks until a message is available
+    try:
+        while True:
+            msg = from_streamer.get()  # blocks until a message is available
 
-        # --- End-of-stream propagation ---
-        if msg is EOS_SENTINEL:
+            # --- End-of-stream propagation ---
+            if msg is EOS_SENTINEL:
+                logger.info("EOS received — forwarding to viewer after %d frame(s)", processed)
+                to_viewer.put(EOS_SENTINEL)
+                return
+
+            # --- Attach to SharedMemory and copy the frame locally ---
+            try:
+                shm = SharedMemory(name=msg.shm_name, create=False)
+                frame_view = np.ndarray(msg.frame_shape, dtype=msg.frame_dtype, buffer=shm.buf)
+                frame = frame_view.copy()
+                shm.close()
+            except FileNotFoundError:
+                logger.warning("SharedMemory block '%s' not found for frame %d — skipping",
+                               msg.shm_name, msg.frame_index)
+                # Forward the message with no contours so the Viewer still sends
+                # the release signal back to the Streamer.
+                to_viewer.put(DetectorMessage(
+                    shm_name=msg.shm_name,
+                    frame_shape=msg.frame_shape,
+                    frame_dtype=msg.frame_dtype,
+                    frame_index=msg.frame_index,
+                    fps=msg.fps,
+                    contours=[],
+                ))
+                continue
+            except Exception as exc:
+                logger.error("Error reading frame %d from SharedMemory: %s — skipping", msg.frame_index, exc)
+                to_viewer.put(DetectorMessage(
+                    shm_name=msg.shm_name,
+                    frame_shape=msg.frame_shape,
+                    frame_dtype=msg.frame_dtype,
+                    frame_index=msg.frame_index,
+                    fps=msg.fps,
+                    contours=[],
+                ))
+                continue
+
+            # --- MOG2 video motion detection ---
+            try:
+                contours = _detect_motion(bg_sub, frame)
+            except Exception as exc:
+                logger.error("Motion detection failed for frame %d: %s — forwarding empty contours", msg.frame_index, exc)
+                contours = []
+
+            # --- Build and forward the downstream message ---
+            det_msg = DetectorMessage(
+                shm_name=msg.shm_name,
+                frame_shape=msg.frame_shape,
+                frame_dtype=msg.frame_dtype,
+                frame_index=msg.frame_index,
+                fps=msg.fps,
+                contours=list(contours),
+            )
+            to_viewer.put(det_msg)
+            processed += 1
+
+    except Exception as exc:
+        logger.exception("Unexpected error in detector: %s", exc)
+    finally:
+        # Guarantee EOS is always forwarded so the Viewer is never left hanging.
+        try:
             to_viewer.put(EOS_SENTINEL)
-            return
-
-        # --- Attach to SharedMemory and copy the frame locally ---
-        shm = SharedMemory(name=msg.shm_name, create=False)
-        # Wrap shm buffer as a numpy array (no copy yet — backed by shm.buf).
-        frame_view = np.ndarray(msg.frame_shape, dtype=msg.frame_dtype, buffer=shm.buf)
-        # Copy before closing so Detector's numpy array is independent of the
-        # shared memory block (Viewer still needs the block via shm_name).
-        frame = frame_view.copy()
-        shm.close()  # release local handle; does NOT unlink the block
-
-        # --- MOG2 video motion detection ---
-        contours = _detect_motion(bg_sub, frame)
-
-        # --- Build and forward the downstream message ---
-        det_msg = DetectorMessage(
-            shm_name=msg.shm_name,        # forward original SHM reference
-            frame_shape=msg.frame_shape,
-            frame_dtype=msg.frame_dtype,
-            frame_index=msg.frame_index,
-            fps=msg.fps,
-            contours=list(contours),      # numpy arrays are picklable for Queue
-        )
-        to_viewer.put(det_msg)
+        except Exception:
+            pass
 
 
 def _detect_motion(bg_sub: cv2.BackgroundSubtractorMOG2, frame: np.ndarray) -> list:
