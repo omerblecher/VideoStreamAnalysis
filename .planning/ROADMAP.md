@@ -56,7 +56,11 @@ Plans:
   2. No zombie processes remain after the pipeline exits (verified via task manager or ps)
   3. SharedMemory blocks are released on exit (no "leaked semaphore" or unlinked shm warnings)
   4. Codebase is committed, tagged `phase-c`, and pushed to GitHub
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Wire stop_event through all processes + update main.py with timeout/terminate/try-finally
+- [ ] 03-02-PLAN.md — End-to-end shutdown verification + git commit, tag phase-c, push to GitHub
 
 ## Progress
 
@@ -66,4 +70,4 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. Pipeline | 4/4 | Complete   | 2026-03-24 |
 | 2. Blurring | 1/2 | In progress | - |
-| 3. Shutdown | 0/TBD | Not started | - |
+| 3. Shutdown | 0/2 | Not started | - |
