@@ -9,8 +9,8 @@ Requirements for all three assignment phases.
 
 ### Pipeline (Phase A)
 
-- [ ] **PIPE-01**: Streamer process reads a local video file path and extracts frames sequentially
-- [ ] **PIPE-02**: Streamer sends each frame to Detector via SharedMemory + Queue
+- [x] **PIPE-01**: Streamer process reads a local video file path and extracts frames sequentially
+- [x] **PIPE-02**: Streamer sends each frame to Detector via SharedMemory + Queue
 - [ ] **PIPE-03**: Detector receives each frame and runs motion detection using basic_vmd.py algorithm (frame differencing, threshold, dilate, findContours)
 - [ ] **PIPE-04**: Detector sends frame + contours metadata to Viewer via SharedMemory + Queue — Detector must NOT draw on the frame
 - [ ] **PIPE-05**: Viewer draws bounding rectangles around each detected contour on the frame
@@ -30,9 +30,9 @@ Requirements for all three assignment phases.
 
 ### IPC Design
 
-- [ ] **IPC-01**: Frame data is transferred between processes via `multiprocessing.SharedMemory` (zero-copy for large NumPy arrays)
-- [ ] **IPC-02**: Metadata (contours, frame shape, dtype, shutdown sentinel) is transferred via `multiprocessing.Queue`
-- [ ] **IPC-03**: A Queue sentinel value (e.g. `None`) signals end-of-stream to downstream processes
+- [x] **IPC-01**: Frame data is transferred between processes via `multiprocessing.SharedMemory` (zero-copy for large NumPy arrays)
+- [x] **IPC-02**: Metadata (contours, frame shape, dtype, shutdown sentinel) is transferred via `multiprocessing.Queue`
+- [x] **IPC-03**: A Queue sentinel value (e.g. `None`) signals end-of-stream to downstream processes
 
 ### Git / Delivery
 
@@ -61,16 +61,16 @@ Requirements for all three assignment phases.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PIPE-01 | Phase 1 | Pending |
-| PIPE-02 | Phase 1 | Pending |
+| PIPE-01 | Phase 1 | Complete |
+| PIPE-02 | Phase 1 | Complete |
 | PIPE-03 | Phase 1 | Pending |
 | PIPE-04 | Phase 1 | Pending |
 | PIPE-05 | Phase 1 | Pending |
 | PIPE-06 | Phase 1 | Pending |
 | PIPE-07 | Phase 1 | Pending |
-| IPC-01 | Phase 1 | Pending |
-| IPC-02 | Phase 1 | Pending |
-| IPC-03 | Phase 1 | Pending |
+| IPC-01 | Phase 1 | Complete |
+| IPC-02 | Phase 1 | Complete |
+| IPC-03 | Phase 1 | Complete |
 | GIT-01 | Phase 1 | Pending |
 | GIT-02 | Phase 1 | Pending |
 | GIT-03 | Phase 1 | Pending |
@@ -87,4 +87,4 @@ Requirements for all three assignment phases.
 
 ---
 *Requirements defined: 2026-03-24*
-*Last updated: 2026-03-24 after roadmap creation*
+*Last updated: 2026-03-24 after 01-01 plan completion (PIPE-01, PIPE-02, IPC-01, IPC-02, IPC-03 complete)*

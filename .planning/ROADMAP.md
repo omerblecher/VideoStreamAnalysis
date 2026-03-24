@@ -28,7 +28,7 @@ Three phases matching the assignment structure: Phase 1 builds the full pipeline
 **Plans**: 4 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — IPC contracts (ipc.py) + Streamer process (streamer.py)
+- [x] 01-01-PLAN.md — IPC contracts (ipc.py) + Streamer process (streamer.py)
 - [ ] 01-02-PLAN.md — Detector process with VMD algorithm (detector.py)
 - [ ] 01-03-PLAN.md — Viewer process + launcher (viewer.py, main.py)
 - [ ] 01-04-PLAN.md — End-to-end verification + git commit, tag phase-a, push to GitHub
@@ -60,6 +60,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Pipeline | 0/4 | Not started | - |
+| 1. Pipeline | 1/4 | In progress | - |
 | 2. Blurring | 0/TBD | Not started | - |
 | 3. Shutdown | 0/TBD | Not started | - |

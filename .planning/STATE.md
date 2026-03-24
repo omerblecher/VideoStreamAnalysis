@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-03-24)
 ## Current Position
 
 Phase: 1 of 3 (Pipeline)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-24 — Roadmap created
+Plan: 1 of 3 in current phase
+Status: In progress
+Last activity: 2026-03-24 — Plan 01-01 complete
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 10%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 2 min
+- Total execution time: 0.03 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01-pipeline | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: -
+- Last 5 plans: 01-01 (2 min)
 - Trend: -
 
 *Updated after each plan completion*
@@ -46,6 +46,9 @@ Recent decisions affecting current work:
 - Queue for metadata/signals: lightweight coordination for contours, frame indices, shutdown sentinel
 - Queue per pipeline stage: Streamer→Detector queue + Detector→Viewer queue, natural backpressure
 - basic_vmd.py used as-is: assignment requirement, no parameter tuning
+- EOS_SENTINEL = None as module constant; all processes check with 'is EOS_SENTINEL' identity comparison
+- Streamer closes shm handle but Viewer owns the unlink after display (lifecycle ownership)
+- FPS fallback to 25.0 when cv2.CAP_PROP_FPS returns <= 0
 
 ### Pending Todos
 
@@ -58,5 +61,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Roadmap created, ready to plan Phase 1
+Stopped at: Completed 01-pipeline 01-01-PLAN.md (IPC contracts + Streamer)
 Resume file: None
