@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-03-24)
 
 **Core value:** Smooth, correctly pipelined video display at original frame rate with motion detection overlaid — demonstrating Python multiprocessing and SharedMemory IPC
-**Current focus:** Phase 2 - Blurring
+**Current focus:** Phase 3 - Shutdown
 
 ## Current Position
 
-Phase: 2 of 3 (Blurring)
-Plan: 2 of 2 in current phase
-Status: Phase 02-blurring complete — all plans done
-Last activity: 2026-03-24 — Plan 02-02 complete
+Phase: 3 of 3 (Shutdown)
+Plan: 1 of 1 in current phase
+Status: Phase 03-shutdown complete — all plans done
+Last activity: 2026-03-24 — Plan 03-01 complete
 
-Progress: [███████░░░] 67%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
+- Total plans completed: 7
 - Average duration: 1.7 min
 - Total execution time: 0.10 hours
 
@@ -29,9 +29,10 @@ Progress: [███████░░░] 67%
 |-------|-------|-------|----------|
 | 01-pipeline | 4 | 10 min | 2.5 min |
 | 02-blurring | 2 | 4 min | 2 min |
+| 03-shutdown | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (1 min), 01-03 (2 min), 01-04 (5 min), 02-01 (1 min), 02-02 (3 min)
+- Last 5 plans: 01-03 (2 min), 01-04 (5 min), 02-01 (1 min), 02-02 (3 min), 03-01 (2 min)
 - Trend: -
 
 *Updated after each plan completion*
@@ -61,6 +62,9 @@ Recent decisions affecting current work:
 - Blur-then-box ordering in run_viewer: _blur_motion_regions called before _draw_motion_boxes
 - cv2.blur (box blur) used instead of cv2.GaussianBlur — GaussianBlur crashed on Python 3.13/Windows; cv2.blur produces equivalent perceptual result
 - Tag phase-b is annotated, pointing to commit d45f357 (Phase B complete: blurring verified and pushed)
+- SHUTDOWN_TIMEOUT = 5 seconds constant in main.py for stuck-process guard
+- stop_event (multiprocessing.Event) wired through all three pipeline processes; Streamer sets it on EOF
+- join(timeout=SHUTDOWN_TIMEOUT) + terminate() + try/finally release_queue drain pattern in main.py
 
 ### Pending Todos
 
@@ -73,5 +77,5 @@ None.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Completed 02-02-PLAN.md — Phase 02-blurring fully complete, phase-b tag pushed to GitHub
+Stopped at: Completed 03-01-PLAN.md — Phase 03-shutdown fully complete, all pipeline processes exit gracefully
 Resume file: None

@@ -24,9 +24,9 @@ Requirements for all three assignment phases.
 
 ### Shutdown (Phase C)
 
-- [ ] **SHUT-01**: When the video ends (Streamer exhausts all frames), a shutdown signal propagates through the pipeline
-- [ ] **SHUT-02**: All three processes (Streamer, Detector, Viewer) terminate cleanly on video end
-- [ ] **SHUT-03**: No zombie processes or resource leaks (SharedMemory cleaned up)
+- [x] **SHUT-01**: When the video ends (Streamer exhausts all frames), a shutdown signal propagates through the pipeline
+- [x] **SHUT-02**: All three processes (Streamer, Detector, Viewer) terminate cleanly on video end
+- [x] **SHUT-03**: No zombie processes or resource leaks (SharedMemory cleaned up)
 
 ### IPC Design
 
@@ -76,9 +76,9 @@ Requirements for all three assignment phases.
 | GIT-03 | Phase 1 | Complete |
 | BLUR-01 | Phase 2 | Complete |
 | BLUR-02 | Phase 2 | Complete |
-| SHUT-01 | Phase 3 | Pending |
-| SHUT-02 | Phase 3 | Pending |
-| SHUT-03 | Phase 3 | Pending |
+| SHUT-01 | Phase 3 | Complete |
+| SHUT-02 | Phase 3 | Complete |
+| SHUT-03 | Phase 3 | Complete |
 
 **Coverage:**
 - v1 requirements: 18 total

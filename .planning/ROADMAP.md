@@ -10,7 +10,7 @@ Three phases matching the assignment structure: Phase 1 builds the full pipeline
 - Integer phases (1, 2, 3): Planned milestone work
 
 - [x] **Phase 1: Pipeline** - Three-process pipeline running end-to-end with motion detection overlaid at original frame rate (assignment Phase A) (completed 2026-03-24)
-- [ ] **Phase 2: Blurring** - Viewer blurs each detected motion region before drawing bounding boxes (assignment Phase B)
+- [x] **Phase 2: Blurring** - Viewer blurs each detected motion region before drawing bounding boxes (assignment Phase B) (completed 2026-03-24)
 - [ ] **Phase 3: Shutdown** - All processes terminate cleanly when video ends with no resource leaks (assignment Phase C)
 
 ## Phase Details
@@ -45,7 +45,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Add _blur_motion_regions to viewer.py (Gaussian blur per bounding rect)
-- [ ] 02-02-PLAN.md — Visual verification + git commit, tag phase-b, push to GitHub
+- [x] 02-02-PLAN.md — Visual verification + git commit, tag phase-b, push to GitHub
 
 ### Phase 3: Shutdown
 **Goal**: The pipeline terminates itself cleanly when the video file ends, with no leftover processes or leaked SharedMemory
@@ -59,7 +59,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Wire stop_event through all processes + update main.py with timeout/terminate/try-finally
+- [x] 03-01-PLAN.md — Wire stop_event through all processes + update main.py with timeout/terminate/try-finally (completed 2026-03-24)
 - [ ] 03-02-PLAN.md — End-to-end shutdown verification + git commit, tag phase-c, push to GitHub
 
 ## Progress
@@ -69,5 +69,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Pipeline | 4/4 | Complete   | 2026-03-24 |
-| 2. Blurring | 1/2 | In progress | - |
-| 3. Shutdown | 0/2 | Not started | - |
+| 2. Blurring | 2/2 | Complete   | 2026-03-24 |
+| 3. Shutdown | 1/2 | In progress | - |
