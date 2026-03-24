@@ -11,8 +11,8 @@ Requirements for all three assignment phases.
 
 - [x] **PIPE-01**: Streamer process reads a local video file path and extracts frames sequentially
 - [x] **PIPE-02**: Streamer sends each frame to Detector via SharedMemory + Queue
-- [ ] **PIPE-03**: Detector receives each frame and runs motion detection using basic_vmd.py algorithm (frame differencing, threshold, dilate, findContours)
-- [ ] **PIPE-04**: Detector sends frame + contours metadata to Viewer via SharedMemory + Queue — Detector must NOT draw on the frame
+- [x] **PIPE-03**: Detector receives each frame and runs motion detection using basic_vmd.py algorithm (frame differencing, threshold, dilate, findContours)
+- [x] **PIPE-04**: Detector sends frame + contours metadata to Viewer via SharedMemory + Queue — Detector must NOT draw on the frame
 - [ ] **PIPE-05**: Viewer draws bounding rectangles around each detected contour on the frame
 - [ ] **PIPE-06**: Viewer overlays current timestamp (HH:MM:SS) in the top-left corner of each frame
 - [ ] **PIPE-07**: Viewer displays the annotated video on screen at the original video frame rate (smooth, not stuttering or sped up)
@@ -63,8 +63,8 @@ Requirements for all three assignment phases.
 |-------------|-------|--------|
 | PIPE-01 | Phase 1 | Complete |
 | PIPE-02 | Phase 1 | Complete |
-| PIPE-03 | Phase 1 | Pending |
-| PIPE-04 | Phase 1 | Pending |
+| PIPE-03 | Phase 1 | Complete |
+| PIPE-04 | Phase 1 | Complete |
 | PIPE-05 | Phase 1 | Pending |
 | PIPE-06 | Phase 1 | Pending |
 | PIPE-07 | Phase 1 | Pending |

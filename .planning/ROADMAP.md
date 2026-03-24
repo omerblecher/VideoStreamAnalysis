@@ -60,6 +60,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Pipeline | 1/4 | In progress | - |
+| 1. Pipeline | 2/4 | In Progress|  |
 | 2. Blurring | 0/TBD | Not started | - |
 | 3. Shutdown | 0/TBD | Not started | - |

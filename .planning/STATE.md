@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-03-24)
 ## Current Position
 
 Phase: 1 of 3 (Pipeline)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: In progress
-Last activity: 2026-03-24 — Plan 01-01 complete
+Last activity: 2026-03-24 — Plan 01-02 complete
 
-Progress: [█░░░░░░░░░] 10%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 2 min
-- Total execution time: 0.03 hours
+- Total plans completed: 2
+- Average duration: 1.5 min
+- Total execution time: 0.05 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-pipeline | 1 | 2 min | 2 min |
+| 01-pipeline | 2 | 3 min | 1.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min)
+- Last 5 plans: 01-01 (2 min), 01-02 (1 min)
 - Trend: -
 
 *Updated after each plan completion*
@@ -49,6 +49,8 @@ Recent decisions affecting current work:
 - EOS_SENTINEL = None as module constant; all processes check with 'is EOS_SENTINEL' identity comparison
 - Streamer closes shm handle but Viewer owns the unlink after display (lifecycle ownership)
 - FPS fallback to 25.0 when cv2.CAP_PROP_FPS returns <= 0
+- Detector copies frame before closing shm handle so its numpy array is independent of the shared memory block
+- Detector never unlinks SharedMemory (Viewer owns cleanup); MIN_CONTOUR_AREA = 500 px²
 
 ### Pending Todos
 
@@ -61,5 +63,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Completed 01-pipeline 01-01-PLAN.md (IPC contracts + Streamer)
+Stopped at: Completed 01-pipeline 01-02-PLAN.md (Detector process)
 Resume file: None
