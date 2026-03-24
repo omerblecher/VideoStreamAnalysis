@@ -127,6 +127,8 @@ def run_streamer(video_path: str, to_detector: Queue, release_queue: Queue, stop
 
         logger.info("All SharedMemory handles released — exiting")
 
+    except KeyboardInterrupt:
+        logger.info("Interrupted")
     except Exception as exc:
         logger.exception("Unexpected error in streamer: %s", exc)
     finally:

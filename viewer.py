@@ -150,6 +150,8 @@ def run_viewer(from_detector: Queue, video_path: str, release_queue: Queue, stop
             except Exception as exc:
                 logger.error("Display error on frame %d: %s — skipping", msg.frame_index, exc)
 
+    except KeyboardInterrupt:
+        logger.info("Interrupted")
     except Exception as exc:
         logger.exception("Unexpected error in viewer: %s", exc)
     finally:

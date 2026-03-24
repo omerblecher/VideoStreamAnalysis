@@ -112,6 +112,8 @@ def run_detector(from_streamer: Queue, to_viewer: Queue, stop_event) -> None:
             to_viewer.put(det_msg)
             processed += 1
 
+    except KeyboardInterrupt:
+        logger.info("Interrupted")
     except Exception as exc:
         logger.exception("Unexpected error in detector: %s", exc)
     finally:
