@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-03-24)
 ## Current Position
 
 Phase: 1 of 3 (Pipeline)
-Plan: 3 of 3 in current phase
-Status: Phase 1 complete
-Last activity: 2026-03-24 — Plan 01-03 complete
+Plan: 4 of 4 in current phase
+Status: Phase 1 complete (all plans done; push to GitHub pending user action)
+Last activity: 2026-03-24 — Plan 01-04 complete
 
-Progress: [███░░░░░░░] 33%
+Progress: [████░░░░░░] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: 1.7 min
-- Total execution time: 0.08 hours
+- Total plans completed: 4
+- Average duration: 1.75 min
+- Total execution time: 0.09 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01-pipeline | 3 | 5 min | 1.7 min |
+| 01-pipeline | 4 | 10 min | 2.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (1 min), 01-03 (2 min)
+- Last 5 plans: 01-01 (2 min), 01-02 (1 min), 01-03 (2 min), 01-04 (5 min)
 - Trend: -
 
 *Updated after each plan completion*
@@ -54,6 +54,8 @@ Recent decisions affecting current work:
 - Viewer defers window title creation until first message so FPS is known; cv2.namedWindow called once
 - Viewer calls shm.close() then shm.unlink() immediately after frame copy — last consumer owns cleanup
 - Unbounded Queues in main.py — no maxsize, allows Streamer to run ahead without blocking
+- Branch is master (not main); remote origin = https://github.com/omerblecher/VideoStreamAnalysis.git
+- Tag phase-a is annotated, pointing to commit 4791b1b (SharedMemory design explanation)
 
 ### Pending Todos
 
@@ -61,10 +63,10 @@ None yet.
 
 ### Blockers/Concerns
 
-None yet.
+- GitHub repository https://github.com/omerblecher/VideoStreamAnalysis does not exist yet — user must create it and then run `git push -u origin master && git push origin phase-a`
 
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Completed 01-pipeline 01-03-PLAN.md (Viewer process and Launcher — Phase 1 complete)
+Stopped at: Completed 01-pipeline 01-04-PLAN.md (Git commit + tag phase-a; push pending GitHub repo creation)
 Resume file: None

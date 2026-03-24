@@ -36,9 +36,9 @@ Requirements for all three assignment phases.
 
 ### Git / Delivery
 
-- [ ] **GIT-01**: Each phase is committed and pushed to `github.com/omerblecher`
-- [ ] **GIT-02**: Each phase has a git tag (`phase-a`, `phase-b`, `phase-c`)
-- [ ] **GIT-03**: Each commit/tag includes a description explaining design decisions (e.g. why SharedMemory was chosen)
+- [x] **GIT-01**: Each phase is committed and pushed to `github.com/omerblecher`
+- [x] **GIT-02**: Each phase has a git tag (`phase-a`, `phase-b`, `phase-c`)
+- [x] **GIT-03**: Each commit/tag includes a description explaining design decisions (e.g. why SharedMemory was chosen)
 
 ## v2 Requirements
 
@@ -71,9 +71,9 @@ Requirements for all three assignment phases.
 | IPC-01 | Phase 1 | Complete |
 | IPC-02 | Phase 1 | Complete |
 | IPC-03 | Phase 1 | Complete |
-| GIT-01 | Phase 1 | Pending |
-| GIT-02 | Phase 1 | Pending |
-| GIT-03 | Phase 1 | Pending |
+| GIT-01 | Phase 1 | Complete |
+| GIT-02 | Phase 1 | Complete |
+| GIT-03 | Phase 1 | Complete |
 | BLUR-01 | Phase 2 | Pending |
 | BLUR-02 | Phase 2 | Pending |
 | SHUT-01 | Phase 3 | Pending |

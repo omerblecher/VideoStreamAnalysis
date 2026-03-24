@@ -9,7 +9,7 @@ Three phases matching the assignment structure: Phase 1 builds the full pipeline
 **Phase Numbering:**
 - Integer phases (1, 2, 3): Planned milestone work
 
-- [ ] **Phase 1: Pipeline** - Three-process pipeline running end-to-end with motion detection overlaid at original frame rate (assignment Phase A)
+- [x] **Phase 1: Pipeline** - Three-process pipeline running end-to-end with motion detection overlaid at original frame rate (assignment Phase A) (completed 2026-03-24)
 - [ ] **Phase 2: Blurring** - Viewer blurs each detected motion region before drawing bounding boxes (assignment Phase B)
 - [ ] **Phase 3: Shutdown** - All processes terminate cleanly when video ends with no resource leaks (assignment Phase C)
 
@@ -60,6 +60,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Pipeline | 3/4 | In Progress|  |
+| 1. Pipeline | 4/4 | Complete   | 2026-03-24 |
 | 2. Blurring | 0/TBD | Not started | - |
 | 3. Shutdown | 0/TBD | Not started | - |
