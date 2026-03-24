@@ -31,10 +31,14 @@ def main():
 
     to_detector = multiprocessing.Queue()
     to_viewer = multiprocessing.Queue()
+    # Viewer puts shm_name here after each frame; Streamer waits on these signals
+    # before closing its handles.  Required on Windows where SharedMemory blocks
+    # are destroyed when the last handle closes (unlike Linux where unlink() is used).
+    release_queue = multiprocessing.Queue()
 
-    streamer_proc = multiprocessing.Process(target=run_streamer, args=(video_path, to_detector), name="Streamer")
+    streamer_proc = multiprocessing.Process(target=run_streamer, args=(video_path, to_detector, release_queue), name="Streamer")
     detector_proc = multiprocessing.Process(target=run_detector, args=(to_detector, to_viewer), name="Detector")
-    viewer_proc   = multiprocessing.Process(target=run_viewer,   args=(to_viewer, video_path),  name="Viewer")
+    viewer_proc   = multiprocessing.Process(target=run_viewer,   args=(to_viewer, video_path, release_queue),  name="Viewer")
 
     for p in [streamer_proc, detector_proc, viewer_proc]:
         p.start()
