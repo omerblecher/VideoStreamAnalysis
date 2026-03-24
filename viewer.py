@@ -17,6 +17,11 @@ from multiprocessing.shared_memory import SharedMemory
 
 from ipc import DetectorMessage, EOS_SENTINEL
 
+# Blur kernel size as a fraction of the bounding box's smaller dimension.
+# Produces a kernel of ~20 % of the smaller side, clamped to [3, 99] and
+# forced to be odd (required by GaussianBlur).
+BLUR_KERNEL_FRACTION = 0.2
+
 
 def _read_frame(msg: DetectorMessage, release_queue: Queue) -> np.ndarray:
     """Attach to the SharedMemory block, copy the frame, then release it."""
@@ -26,6 +31,33 @@ def _read_frame(msg: DetectorMessage, release_queue: Queue) -> np.ndarray:
     shm.unlink()  # no-op on Windows; frees named block on Linux
     release_queue.put(msg.shm_name)
     return frame
+
+
+def _blur_motion_regions(frame: np.ndarray, contours: list) -> None:
+    """Gaussian-blur the bounding rectangle of each motion contour in-place.
+
+    Blur is applied only within the bounding rectangle (BLUR-02).
+    Coordinates are clipped to frame bounds so partial off-edge boxes are safe.
+    Kernel size scales with the bounding box (proportional to BLUR_KERNEL_FRACTION),
+    clamped to odd values in [3, 99].
+    Overlapping bounding rectangles are each blurred independently; double-blur
+    in overlap zones is acceptable.
+    """
+    h, w = frame.shape[:2]
+    for c in contours:
+        x, y, bw, bh = cv2.boundingRect(c)
+        # Clip to frame bounds
+        x1, y1 = max(0, x), max(0, y)
+        x2, y2 = min(w, x + bw), min(h, y + bh)
+        if x2 <= x1 or y2 <= y1:
+            continue  # degenerate / fully out of frame — skip
+        # Proportional kernel: fraction of the smaller bbox dimension, odd, clamped
+        k = max(3, int(min(bw, bh) * BLUR_KERNEL_FRACTION))
+        if k % 2 == 0:
+            k += 1
+        k = min(k, 99)
+        roi = frame[y1:y2, x1:x2]
+        frame[y1:y2, x1:x2] = cv2.GaussianBlur(roi, (k, k), 0)
 
 
 def _draw_motion_boxes(frame: np.ndarray, contours: list) -> None:
@@ -77,6 +109,7 @@ def run_viewer(from_detector: Queue, video_path: str, release_queue: Queue) -> N
             cv2.namedWindow(title, cv2.WINDOW_NORMAL)
 
         frame = _read_frame(msg, release_queue)
+        _blur_motion_regions(frame, msg.contours)
         _draw_motion_boxes(frame, msg.contours)
         _draw_timestamp(frame, msg.frame_index, msg.fps)
 
