@@ -41,7 +41,11 @@ Plans:
   1. Motion regions in the displayed video appear blurred (Gaussian or equivalent) inside their bounding rectangles
   2. Areas outside detected contours are not blurred
   3. Codebase is committed, tagged `phase-b`, and pushed to GitHub
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Add _blur_motion_regions to viewer.py (Gaussian blur per bounding rect)
+- [ ] 02-02-PLAN.md — Visual verification + git commit, tag phase-b, push to GitHub
 
 ### Phase 3: Shutdown
 **Goal**: The pipeline terminates itself cleanly when the video file ends, with no leftover processes or leaked SharedMemory
@@ -61,5 +65,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Pipeline | 4/4 | Complete   | 2026-03-24 |
-| 2. Blurring | 0/TBD | Not started | - |
+| 2. Blurring | 0/2 | Not started | - |
 | 3. Shutdown | 0/TBD | Not started | - |
