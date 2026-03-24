@@ -44,7 +44,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Add _blur_motion_regions to viewer.py (Gaussian blur per bounding rect)
+- [x] 02-01-PLAN.md — Add _blur_motion_regions to viewer.py (Gaussian blur per bounding rect)
 - [ ] 02-02-PLAN.md — Visual verification + git commit, tag phase-b, push to GitHub
 
 ### Phase 3: Shutdown
@@ -65,5 +65,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Pipeline | 4/4 | Complete   | 2026-03-24 |
-| 2. Blurring | 0/2 | Not started | - |
+| 2. Blurring | 1/2 | In progress | - |
 | 3. Shutdown | 0/TBD | Not started | - |

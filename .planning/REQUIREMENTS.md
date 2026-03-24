@@ -19,8 +19,8 @@ Requirements for all three assignment phases.
 
 ### Blurring (Phase B)
 
-- [ ] **BLUR-01**: Viewer applies a blur (e.g. Gaussian) to each detected motion region before drawing bounding boxes
-- [ ] **BLUR-02**: Blurring is applied only within the bounding rectangle of each contour
+- [x] **BLUR-01**: Viewer applies a blur (e.g. Gaussian) to each detected motion region before drawing bounding boxes
+- [x] **BLUR-02**: Blurring is applied only within the bounding rectangle of each contour
 
 ### Shutdown (Phase C)
 
@@ -74,8 +74,8 @@ Requirements for all three assignment phases.
 | GIT-01 | Phase 1 | Complete |
 | GIT-02 | Phase 1 | Complete |
 | GIT-03 | Phase 1 | Complete |
-| BLUR-01 | Phase 2 | Pending |
-| BLUR-02 | Phase 2 | Pending |
+| BLUR-01 | Phase 2 | Complete |
+| BLUR-02 | Phase 2 | Complete |
 | SHUT-01 | Phase 3 | Pending |
 | SHUT-02 | Phase 3 | Pending |
 | SHUT-03 | Phase 3 | Pending |

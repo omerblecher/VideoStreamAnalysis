@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-03-24)
 
 **Core value:** Smooth, correctly pipelined video display at original frame rate with motion detection overlaid — demonstrating Python multiprocessing and SharedMemory IPC
-**Current focus:** Phase 1 - Pipeline
+**Current focus:** Phase 2 - Blurring
 
 ## Current Position
 
-Phase: 1 of 3 (Pipeline)
-Plan: 4 of 4 in current phase
-Status: Phase 1 complete (all plans done; push to GitHub pending user action)
-Last activity: 2026-03-24 — Plan 01-04 complete
+Phase: 2 of 3 (Blurring)
+Plan: 1 of 2 in current phase
+Status: In progress — Plan 02-01 complete
+Last activity: 2026-03-24 — Plan 02-01 complete
 
-Progress: [████░░░░░░] 40%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
-- Average duration: 1.75 min
+- Total plans completed: 5
+- Average duration: 1.6 min
 - Total execution time: 0.09 hours
 
 **By Phase:**
@@ -28,9 +28,10 @@ Progress: [████░░░░░░] 40%
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-pipeline | 4 | 10 min | 2.5 min |
+| 02-blurring | 1 | 1 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2 min), 01-02 (1 min), 01-03 (2 min), 01-04 (5 min)
+- Last 5 plans: 01-01 (2 min), 01-02 (1 min), 01-03 (2 min), 01-04 (5 min), 02-01 (1 min)
 - Trend: -
 
 *Updated after each plan completion*
@@ -56,6 +57,8 @@ Recent decisions affecting current work:
 - Unbounded Queues in main.py — no maxsize, allows Streamer to run ahead without blocking
 - Branch is master (not main); remote origin = https://github.com/omerblecher/VideoStreamAnalysis.git
 - Tag phase-a is annotated, pointing to commit 4791b1b (SharedMemory design explanation)
+- BLUR_KERNEL_FRACTION = 0.2: Gaussian kernel is 20% of smaller bbox dimension, forced odd, clamped to [3, 99]
+- Blur-then-box ordering in run_viewer: _blur_motion_regions called before _draw_motion_boxes
 
 ### Pending Todos
 
@@ -68,5 +71,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-24
-Stopped at: Completed 01-pipeline 01-04-PLAN.md (Git commit + tag phase-a; push pending GitHub repo creation)
+Stopped at: Completed 02-blurring 02-01-PLAN.md (_blur_motion_regions added to viewer.py)
 Resume file: None
