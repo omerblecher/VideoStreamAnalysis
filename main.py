@@ -11,17 +11,22 @@ Usage:
 
 import sys
 import os
+import logging
 import multiprocessing
 
 from streamer import run_streamer
 from detector import run_detector
 from viewer import run_viewer
 
-# Seconds to wait for each child process to exit on its own before force-terminating.
-SHUTDOWN_TIMEOUT = 5
-
 
 def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    logger = logging.getLogger("main")
+
     if len(sys.argv) != 2:
         print("Usage: python main.py <video_path>")
         sys.exit(1)
@@ -29,7 +34,7 @@ def main():
     video_path = sys.argv[1]
 
     if not os.path.isfile(video_path):
-        print(f"Error: video file not found: {video_path}")
+        logger.error("Video file not found: %s", video_path)
         sys.exit(1)
 
     stop_event = multiprocessing.Event()
@@ -45,16 +50,39 @@ def main():
     detector_proc = multiprocessing.Process(target=run_detector, args=(to_detector, to_viewer, stop_event), name="Detector")
     viewer_proc   = multiprocessing.Process(target=run_viewer,   args=(to_viewer, video_path, release_queue, stop_event),  name="Viewer")
 
-    try:
-        for p in [streamer_proc, detector_proc, viewer_proc]:
-            p.start()
+    processes = [streamer_proc, detector_proc, viewer_proc]
 
-        for p in [streamer_proc, detector_proc, viewer_proc]:
-            p.join(timeout=SHUTDOWN_TIMEOUT)
+    try:
+        for p in processes:
+            p.start()
+            logger.info("Started %s (pid=%d)", p.name, p.pid)
+
+        # Wait for Streamer to signal video EOF before joining.
+        # Without this the join fires while the video is still playing.
+        stop_event.wait()
+        logger.info("EOF signalled — waiting for pipeline to drain")
+
+        # Join in dependency order: Detector exits first (after EOS from Streamer),
+        # then Viewer (after EOS from Detector), then Streamer (after Viewer releases
+        # all SharedMemory handles via release_queue).  Joining Streamer first would
+        # deadlock because Streamer waits for Viewer's release signals.
+        #
+        # No per-process timeout: Streamer reads ahead of real-time so queues can
+        # hold many frames that Viewer drains at playback speed (cv2.waitKey adds
+        # ~40ms/frame delay).  EOS_SENTINEL propagation is the correct exit mechanism.
+        for p in [detector_proc, viewer_proc, streamer_proc]:
+            p.join()
+            logger.info("%s exited (exit code %s)", p.name, p.exitcode)
+
+    except KeyboardInterrupt:
+        logger.warning("Interrupted — terminating pipeline processes")
+        for p in processes:
             if p.is_alive():
-                print(f"[main] WARNING: {p.name} did not exit within {SHUTDOWN_TIMEOUT}s — terminating")
                 p.terminate()
                 p.join()
+                logger.info("Terminated %s", p.name)
+        sys.exit(130)  # standard exit code for Ctrl+C
+
     finally:
         # Best-effort cleanup for any SharedMemory blocks left in release_queue
         # (handles the abnormal-exit case where Streamer never drained its open_handles).
@@ -67,7 +95,7 @@ def main():
             except Exception:
                 break
         if drained:
-            print(f"[main] WARNING: drained {drained} unreleased shm signal(s) from release_queue")
+            logger.warning("Drained %d unreleased shm signal(s) from release_queue", drained)
 
 
 if __name__ == "__main__":
