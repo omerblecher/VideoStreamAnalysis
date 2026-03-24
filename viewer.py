@@ -51,13 +51,9 @@ def _blur_motion_regions(frame: np.ndarray, contours: list) -> None:
         x2, y2 = min(w, x + bw), min(h, y + bh)
         if x2 <= x1 or y2 <= y1:
             continue  # degenerate / fully out of frame — skip
-        # Proportional kernel: fraction of the smaller bbox dimension, odd, clamped
-        k = max(3, int(min(bw, bh) * BLUR_KERNEL_FRACTION))
-        if k % 2 == 0:
-            k += 1
-        k = min(k, 99)
-        roi = frame[y1:y2, x1:x2]
-        frame[y1:y2, x1:x2] = cv2.GaussianBlur(roi, (k, k), 0)
+        # Proportional kernel: fraction of the smaller bbox dimension, clamped to [3, 99]
+        k = max(3, min(99, int(min(bw, bh) * BLUR_KERNEL_FRACTION)))
+        frame[y1:y2, x1:x2] = cv2.blur(frame[y1:y2, x1:x2], (k, k))
 
 
 def _draw_motion_boxes(frame: np.ndarray, contours: list) -> None:
