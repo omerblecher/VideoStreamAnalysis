@@ -13,9 +13,9 @@ Requirements for all three assignment phases.
 - [x] **PIPE-02**: Streamer sends each frame to Detector via SharedMemory + Queue
 - [x] **PIPE-03**: Detector receives each frame and runs motion detection using basic_vmd.py algorithm (frame differencing, threshold, dilate, findContours)
 - [x] **PIPE-04**: Detector sends frame + contours metadata to Viewer via SharedMemory + Queue — Detector must NOT draw on the frame
-- [ ] **PIPE-05**: Viewer draws bounding rectangles around each detected contour on the frame
-- [ ] **PIPE-06**: Viewer overlays current timestamp (HH:MM:SS) in the top-left corner of each frame
-- [ ] **PIPE-07**: Viewer displays the annotated video on screen at the original video frame rate (smooth, not stuttering or sped up)
+- [x] **PIPE-05**: Viewer draws bounding rectangles around each detected contour on the frame
+- [x] **PIPE-06**: Viewer overlays current timestamp (HH:MM:SS) in the top-left corner of each frame
+- [x] **PIPE-07**: Viewer displays the annotated video on screen at the original video frame rate (smooth, not stuttering or sped up)
 
 ### Blurring (Phase B)
 
@@ -65,9 +65,9 @@ Requirements for all three assignment phases.
 | PIPE-02 | Phase 1 | Complete |
 | PIPE-03 | Phase 1 | Complete |
 | PIPE-04 | Phase 1 | Complete |
-| PIPE-05 | Phase 1 | Pending |
-| PIPE-06 | Phase 1 | Pending |
-| PIPE-07 | Phase 1 | Pending |
+| PIPE-05 | Phase 1 | Complete |
+| PIPE-06 | Phase 1 | Complete |
+| PIPE-07 | Phase 1 | Complete |
 | IPC-01 | Phase 1 | Complete |
 | IPC-02 | Phase 1 | Complete |
 | IPC-03 | Phase 1 | Complete |
@@ -87,4 +87,4 @@ Requirements for all three assignment phases.
 
 ---
 *Requirements defined: 2026-03-24*
-*Last updated: 2026-03-24 after 01-01 plan completion (PIPE-01, PIPE-02, IPC-01, IPC-02, IPC-03 complete)*
+*Last updated: 2026-03-24 after 01-03 plan completion (PIPE-05, PIPE-06, PIPE-07 complete)*
