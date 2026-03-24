@@ -22,7 +22,7 @@ from ipc import ShmFrameMessage, DetectorMessage, EOS_SENTINEL
 MIN_CONTOUR_AREA: int = 500
 
 
-def run_detector(from_streamer: Queue, to_viewer: Queue) -> None:
+def run_detector(from_streamer: Queue, to_viewer: Queue, stop_event) -> None:
     """Main loop for the Detector process.
 
     Reads ShmFrameMessage objects from *from_streamer*, applies MOG2-based
@@ -34,6 +34,8 @@ def run_detector(from_streamer: Queue, to_viewer: Queue) -> None:
                        the Streamer process.
         to_viewer:     Queue to which DetectorMessage (or EOS_SENTINEL) is sent
                        for the Viewer process.
+        stop_event:    multiprocessing.Event accepted for interface consistency
+                       but not used; EOS propagates via Queue.
     """
     # Initialise MOG2 subtractor once; it builds an adaptive background model
     # over the first several frames so the initial frames may have high recall.

@@ -25,7 +25,7 @@ from multiprocessing.shared_memory import SharedMemory
 from ipc import ShmFrameMessage, EOS_SENTINEL, frame_shm_size
 
 
-def run_streamer(video_path: str, to_detector: Queue, release_queue: Queue) -> None:
+def run_streamer(video_path: str, to_detector: Queue, release_queue: Queue, stop_event) -> None:
     """Read video frames and forward them to the Detector via SharedMemory + Queue.
 
     Args:
@@ -34,6 +34,8 @@ def run_streamer(video_path: str, to_detector: Queue, release_queue: Queue) -> N
         release_queue: Queue on which the Viewer puts shm_name strings after it has
                        finished with each frame. The Streamer waits for all releases
                        before exiting so its handles stay valid for downstream attach.
+        stop_event:    multiprocessing.Event set by this process when EOF is reached,
+                       signalling main that the stream is exhausted.
 
     Behaviour:
         - If the video cannot be opened, puts EOS_SENTINEL on to_detector and
@@ -91,6 +93,7 @@ def run_streamer(video_path: str, to_detector: Queue, release_queue: Queue) -> N
 
     # Signal end-of-stream so Detector (and transitively Viewer) can shut down
     to_detector.put(EOS_SENTINEL)
+    stop_event.set()
     cap.release()
 
     # Wait for Viewer to release each frame before closing handles and exiting.

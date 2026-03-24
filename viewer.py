@@ -79,7 +79,7 @@ def _draw_timestamp(frame: np.ndarray, frame_index: int, fps: float) -> None:
     cv2.putText(frame, ts, (x0 + pad, y0 + pad + text_h), font, font_scale, (255, 255, 255), thickness)
 
 
-def run_viewer(from_detector: Queue, video_path: str, release_queue: Queue) -> None:
+def run_viewer(from_detector: Queue, video_path: str, release_queue: Queue, stop_event) -> None:
     """Main loop for the Viewer process.
 
     Args:
@@ -89,6 +89,9 @@ def run_viewer(from_detector: Queue, video_path: str, release_queue: Queue) -> N
         release_queue: Queue on which this process puts each shm_name after it
                        has finished with the block, so the Streamer can close its
                        handle (required for Windows SharedMemory cleanup).
+        stop_event:    multiprocessing.Event accepted for interface consistency
+                       but not used; EOS propagates via Queue and triggers
+                       cv2.destroyAllWindows on receipt.
     """
     basename = os.path.basename(video_path)
     title: str | None = None
